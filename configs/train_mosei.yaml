@@ -1,0 +1,90 @@
+base:
+  seed: 1111
+  lr: 0.0001
+  weight_decay: 0.0001
+  batch_size: 64
+  n_epochs: 200
+  num_workers: 8
+  adv: 0.01
+  recon: 0.1 
+  task: 1.0
+  para_rank: 0.01
+  paraSSL_LV: 0.001
+  paraSSL_LA: 0.001
+  paraSSL_VA: 0.001
+  train_mode: regression # only support regression now
+  missing_rate_eval_test: 0.5   # used for evaluation and testing
+  do_validation: true
+  stage: completion
+  n_epochs_stage1: 200
+  n_epochs_stage2: 200
+
+
+dataset:
+  datasetName: mosei
+  dataPath: data/mosei/unaligned_50.pkl
+   
+
+model:    
+  feature_extractor:
+    bert_pretrained: 'bert-base-uncased'
+    input_length: [50, 500, 500] # language, video, audio
+    token_length: [8, 8, 8] # language, video, audio
+    heads: 8
+    input_dims: [768, 35, 74] # language, video, audio
+    hidden_dims: [128, 128, 128] # language, video, audio
+    depth: 2
+
+  reconstructor:
+    input_length: 8
+    depth: 2
+    heads: 8
+    input_dim: 128
+    hidden_dim: 128
+
+
+  fusion:
+    atten_projection:
+      input_length: 8
+      token_length: 8
+      depth: 2
+      heads: 8
+      input_dim: 128
+      hidden_dim: 128
+    
+    modal_predictors:
+      input_length: 8
+      token_length: 8
+      depth: 2
+      heads: 8
+      input_dim: 128
+      hidden_dim: 128
+      transformer_depth: 2
+      transformer_heads: 4
+      
+    final_predictor:
+      input_length: 8
+      token_length: 8
+      depth: 2
+      heads: 8
+      input_dim: 128
+      hidden_dim: 128
+      transformer_depth: 2
+      transformer_heads: 4
+
+  GAN:
+    generator:
+      input_length: 8
+      token_length: 8
+      depth: 2
+      input_dim: 128
+      hidden_dim: 128
+      latent_dim: 128
+
+    discriminator:
+      input_length: 8
+      token_length: 8
+      depth: 2
+      input_dim: 128
+      hidden_dim: 128
+      latent_dim: 128
